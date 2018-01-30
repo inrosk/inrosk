@@ -24,6 +24,17 @@
         echo mysqli_error($conn);
       }
     }
+    
+    function processQueryAsDump($result)
+    {
+      if (mysqli_num_rows($result) > 0)
+      {
+        echo mysqli_num_rows($result);
+        while ($row = mysql_fetch_assoc($result)) {
+          var_dump($row);
+        }
+      }
+      
     multi_query($conn, $query, 'processQuerryAsArray');
     mysql_close($conn);
-     ?>
+ ?>
