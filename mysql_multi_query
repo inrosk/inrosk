@@ -1,0 +1,29 @@
+<?php
+    $servername = "localhost";
+    $username = "";
+    $password = "";
+    
+    $conn = mysqli_connect($servername, $username, $password, "nazwabazy");
+    
+    $conn->set_charset("utf8");
+    
+    function multi_query($conn,$query, $processing_function)
+    {
+      if (mysqli_multi_query($conn, $query))
+      {
+        do {
+          $result = mysqli_store_result($conn);
+          if($result)
+          {
+            $procesprocessing_function($result);
+            mysqli_free_result($result);
+          }
+        } while (mysqli_more_results($conn) && mysqli_next_result($conn));
+      }
+      else {
+        echo mysqli_error($conn);
+      }
+    }
+    multi_query($conn, $query, 'processQuerryAsArray');
+    mysql_close($conn);
+     ?>
