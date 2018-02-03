@@ -1,0 +1,51 @@
+window.onload = init;
+
+function init() {
+
+    var elementy = document.getElementsByClassName('rozwin');
+    for (var i = 0; i < elementy.length; i++) {
+        elementy[i].onclick = function () {
+
+            if (this.parentNode.getElementsByClassName("tresc_rozwijana")[0].style.display != "block") {
+                this.firstChild.nodeValue = '[-] ';
+                this.parentNode.getElementsByClassName("tresc_rozwijana")[0].style.display = "block";
+                showInfo(this.parentNode.getElementsByClassName("tresc_rozwijana")[0], this.parentNode.getElementsByClassName("naglowek")[0].firstChild.nodeValue);
+
+            } else {
+                this.firstChild.nodeValue = '[+] ';
+                this.parentNode.getElementsByClassName("tresc_rozwijana")[0].style.display = "none";
+
+            }
+        }
+    }
+
+    ajaxInit();
+}
+
+function ajaxInit() {
+    var XHR = null;
+    XHR = new XMLHttpRequest()
+    return XHR;
+
+}
+
+function showInfo(infoToChange, nameOfSearchedProduct) {
+    var XHR = ajaxInit();
+    if (XHR != null) {
+        XHR.open("GET", "video-kursy.php?nameOfSearchedProduct="+encodeURIComponent(nameOfSearchedProduct), true);
+        XHR.onreadystatechange = function () 
+        
+        
+        
+        {
+            if (XHR.readyState == 4) {
+                if (XHR.status == 200) {
+                    infoToChange.innerHTML = XHR.responseText;
+                } else {
+                    alert("wystąpił błąd")
+                }
+            }
+        }
+        XHR.send(null);
+    }
+}
