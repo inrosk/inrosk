@@ -1,0 +1,68 @@
+window.onload = init;
+var timeout;
+
+function init() {
+    getFile("test.txt");
+    ajaxInit();
+    
+}
+
+
+
+
+function ajaxInit()
+
+{
+    var XHR = null;
+    XHR = new XMLHttpRequest()
+    return XHR;
+
+}
+
+function getFile(fileName) {
+    var XHR = ajaxInit();
+    if (XHR != null) {
+        XHR.open("GET", "tester.php?fileName=" + encodeURIComponent(fileName) + "&r=" + Math.random(), true);
+        XHR.onreadystatechange = function () {
+            if (XHR.readyState == 4) {
+                if (XHR.status == 200) {
+                    var lastModified = new Date(XHR.getResponseHeader("Last-Modified"));
+                    document.getElementById("tresc_czesto_aktualizowana").innerHTML = XHR.responseText;
+                    timeout = setTimeout(function () {
+                        checkIfToUpdate(fileName, lastModified)
+                    }, 1000);
+                } 
+                else
+                    alert("wystąpił bląd " + XHR.status);
+            }
+        }
+        XHR.send(null);
+    }
+
+
+}
+
+function checkIfToUpdate(fileName, lastModified) {
+    var XHR = ajaxInit();
+    if (XHR != null) {
+        XHR.open("HEAD", "tester.php?fileName=" + encodeURIComponent(fileName) + "&r=" + Math.random(), true);
+        XHR.onreadystatechange = function () {
+            if (XHR.readyState == 4) {
+                if (XHR.status == 200) {
+                    
+                    if (lastModified.getTime() == new Date(XHR.getResponseHeader("Last-Modified")).getTime())
+                        timeout = setTimeout(function () { checkIfToUpdate(fileName, lastModified) }, 1000);
+                    
+                    else
+                        getFile(fileName)
+                    
+                    
+                } else
+                    alert("wystąpił bląd " + XHR.status);
+            }
+        }
+
+        XHR.send(null);
+    }
+    
+}
